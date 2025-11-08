@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const signupForm = document.getElementById("signup-form");
   const activityInput = document.getElementById("activity");
   const closeRegistrationModal = document.querySelector(".close-modal");
+  const announcementsContainer = document.getElementById("announcements-container");
 
   // Search and filter elements
   const searchInput = document.getElementById("activity-search");
@@ -361,6 +362,27 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Default to "academic" if no match
     return "academic";
+  }
+
+  // Function to fetch and display announcements from API
+  async function fetchAnnouncements() {
+    try {
+      const response = await fetch("/announcements");
+      const announcements = await response.json();
+
+      // Clear container
+      announcementsContainer.innerHTML = "";
+
+      // Display each announcement
+      announcements.forEach((announcement) => {
+        const banner = document.createElement("div");
+        banner.className = "announcement-banner";
+        banner.textContent = announcement.message;
+        announcementsContainer.appendChild(banner);
+      });
+    } catch (error) {
+      console.error("Error fetching announcements:", error);
+    }
   }
 
   // Function to fetch activities from API with optional day and time filters
@@ -864,5 +886,6 @@ document.addEventListener("DOMContentLoaded", () => {
   // Initialize app
   checkAuthentication();
   initializeFilters();
+  fetchAnnouncements();
   fetchActivities();
 });
